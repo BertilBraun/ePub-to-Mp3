@@ -1,8 +1,8 @@
-
 import pyttsx3
 from gtts import gTTS
 from bs4 import BeautifulSoup
 from ebooklib import epub, ITEM_DOCUMENT
+from multiprocessing import Pool, cpu_count
 
 def read_ePub(path) -> str:
 	
@@ -15,15 +15,15 @@ def read_ePub(path) -> str:
 
 engine = pyttsx3.init(driverName='sapi5')
 
-def save(path, to_save_to, voice_id):
-	text = read_ePub(path)
+def save(data):
+	text = read_ePub(data[0])
 	print("read File")
 
-	engine.setProperty('voice', voice_id)
+	engine.setProperty('voice', data[2])
 	engine.setProperty('rate', 300)
 
-	print("saving File " + to_save_to)
-	engine.save_to_file(text=text,filename=to_save_to)
+	print("saving File " + data[1])
+	engine.save_to_file(text=text,filename=data[1])
 	engine.runAndWait()
 	print("saved File")
 
@@ -40,6 +40,7 @@ names = [
 	"Sapiens"	
 ]
 
-for p, n in zip(paths, names):
-	save(p, n + " Male.mp3", voices[1].id)
-	save(p, n + " Female.mp3", voices[2].id)
+if __name__ == '__main__': 
+	p = Pool(cpu_count())
+
+	p.map(save, ([p, n + " Male.mp3", voices[1].id] for p, n in zip(paths, names)))
