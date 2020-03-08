@@ -20,7 +20,7 @@ def save(data):
 	print("read File")
 
 	engine.setProperty('voice', data[2])
-	engine.setProperty('rate', 300)
+	engine.setProperty('rate', 250)
 
 	print("saving File " + data[1])
 	engine.save_to_file(text=text,filename=data[1])
@@ -43,4 +43,4 @@ names = [
 if __name__ == '__main__': 
 	p = Pool(cpu_count())
 
-	p.map(save, ([p, n + " Male.mp3", voices[1].id] for p, n in zip(paths, names)))
+	p.map(save, ([p, n + ".mp3", voices[2].id] for p, n in zip(paths, names)))
